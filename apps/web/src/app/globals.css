@@ -54,7 +54,7 @@
   }
 
   .nav-item-active {
-    @apply bg-brand-600/20 text-brand-400 border border-brand-600/30;
+    @apply bg-brand-600 bg-opacity-20 text-brand-600 border border-brand-600 border-opacity-30;
   }
 
   .btn-primary {
@@ -84,5 +84,5 @@
 }
 .prose-dark ul { @apply list-disc list-inside; }
 .prose-dark ol { @apply list-decimal list-inside; }
-.prose-dark a { @apply text-brand-400 underline; }
+.prose-dark a { @apply text-brand-600 underline; }
 .prose-dark blockquote { @apply border-l-4 border-brand-600 pl-4 italic text-slate-400; }

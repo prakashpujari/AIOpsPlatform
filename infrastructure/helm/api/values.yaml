@@ -1,0 +1,32 @@
+# Default values for the API Helm chart.
+# These can be overridden per environment via Kustomize overlays.
+
+replicaCount: 1
+
+image:
+  repository: your-registry/aiops-api
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 8000
+  targetPort: 8000
+
+resources:
+  limits:
+    cpu: "500m"
+    memory: "512Mi"
+  requests:
+    cpu: "250m"
+    memory: "256Mi"
+
+env: {}
+
+ingress:
+  enabled: false
+  hosts:
+    - host: api.local
+      paths:
+        - path: /
+          pathType: Prefix

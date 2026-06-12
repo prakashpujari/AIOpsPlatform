@@ -125,7 +125,12 @@ jobs:
         with:
           python-version: ${{ env.PYTHON_VERSION }}
       - run: pip install bandit safety
-      - run: bandit -r apps/ agents/ -ll
+      - run: bandit -r apps/ agents/ -ll --severity HIGH
+      - name: Install Conftest (OPA policy testing)
+        run: |
+          pip install conftest
+      - name: Verify OPA policies with Conftest
+        run: conftest verify
       - name: Trivy vulnerability scan
         uses: aquasecurity/trivy-action@master
         with:

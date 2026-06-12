@@ -11,6 +11,8 @@ const config: Config = {
     extend: {
       colors: {
         brand: {
+          400: "#60a5fa", // added missing brand-400
+
           50: "#eff6ff",
           100: "#dbeafe",
           500: "#3b82f6",

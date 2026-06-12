@@ -49,6 +49,10 @@ scripts/       → Setup, Deploy, Migrate, Backup
 ./scripts/setup/local-dev.sh
 ```
 
+## Local Development
+
+For a step‑by‑step guide on running the full stack locally (including required environment variables, manual alternatives, verification commands, and UI screenshot instructions), see the documentation at **[docs/local-dev.md](docs/local-dev.md)**.
+
 ## Phases
 
 - Phase 1: Project Structure ✅

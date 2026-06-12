@@ -57,6 +57,9 @@ async function refreshAccessToken(token: JWT): Promise<JWT> {
 }
 
 export const authConfig: NextAuthConfig = {
+  secret: process.env.NEXTAUTH_SECRET,
+  // Base URL for callbacks (required for proper redirect handling)
+  url: process.env.NEXTAUTH_URL,
   providers: [],
   callbacks: {
     async jwt({ token, account, profile }) {

@@ -15,7 +15,7 @@ from ...domain.incidents.models import (
     ResolveIncidentCommand,
     UpdateIncidentCommand,
 )
-from ...infrastructure.database.session import get_db
+from ...infrastructure.database.session import get_db, get_read_db
 from ...services.audit_service import AuditService
 from ...services.incident_service import IncidentService
 
@@ -24,6 +24,14 @@ router = APIRouter(prefix="/incidents", tags=["Incidents"])
 
 
 def _get_service(db: AsyncSession = Depends(get_db)) -> IncidentService:
+    # Primary session for write operations
+    return IncidentService(db)
+
+def _get_service_read(db: AsyncSession = Depends(get_read_db)) -> IncidentService:
+    """Return a read‑only IncidentService.
+    If a replica engine is configured, ``get_read_db`` will provide a session
+    bound to that replica; otherwise it falls back to the primary DB.
+    """
     return IncidentService(db)
 
 

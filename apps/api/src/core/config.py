@@ -3,9 +3,9 @@
 from __future__ import annotations
 
 from functools import lru_cache
-from typing import Literal
+from typing import Literal, Optional
 
-from pydantic import AnyHttpUrl, Field, PostgresDsn, RedisDsn, SecretStr
+from pydantic import AnyHttpUrl, Field, PostgreSQLDsn, RedisDsn, SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -26,7 +26,7 @@ class Settings(BaseSettings):
     debug: bool = False
 
     # ── Database ───────────────────────────────
-    database_url: PostgresDsn = Field(
+    database_url: PostgreSQLDsn = Field(
         default="postgresql+asyncpg://aiops:changeme@localhost:5432/aiops_platform"
     )
     db_pool_size: int = 20
@@ -81,6 +81,10 @@ class Settings(BaseSettings):
     jira_project_key: str = "AIOPS"
 
     # ── OpenTelemetry ──────────────────────────
+    # ── Database Replication ─────────────────────
+    replica_database_url: Optional[PostgreSQLDsn] = Field(default=None)
+    use_replica: bool = False
+
     otel_service_name: str = "aiops-api"
     otel_exporter_otlp_endpoint: str = "http://localhost:4317"
     otel_enabled: bool = True
