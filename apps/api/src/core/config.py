@@ -5,7 +5,7 @@ from __future__ import annotations
 from functools import lru_cache
 from typing import Literal, Optional
 
-from pydantic import AnyHttpUrl, Field, PostgreSQLDsn, RedisDsn, SecretStr
+from pydantic import AnyHttpUrl, Field, PostgresDsn, RedisDsn, SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -26,7 +26,7 @@ class Settings(BaseSettings):
     debug: bool = False
 
     # ── Database ───────────────────────────────
-    database_url: PostgreSQLDsn = Field(
+    database_url: str = Field(
         default="postgresql+asyncpg://aiops:changeme@localhost:5432/aiops_platform"
     )
     db_pool_size: int = 20
@@ -82,7 +82,7 @@ class Settings(BaseSettings):
 
     # ── OpenTelemetry ──────────────────────────
     # ── Database Replication ─────────────────────
-    replica_database_url: Optional[PostgreSQLDsn] = Field(default=None)
+    replica_database_url: Optional[PostgresDsn] = Field(default=None)
     use_replica: bool = False
 
     otel_service_name: str = "aiops-api"

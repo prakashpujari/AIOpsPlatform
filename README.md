@@ -45,13 +45,47 @@ scripts/       → Setup, Deploy, Migrate, Backup
 
 ## Quick Start
 
+### Full Stack (with Docker)
+
 ```bash
 ./scripts/setup/local-dev.sh
 ```
 
+### Frontend Only (No Docker Required)
+
+```bash
+# Terminal 1: Start mock API server
+npm install express cors  # one-time
+node mock-api-server.js
+
+# Terminal 2: Start frontend
+cd apps/web
+npm install
+cp .env.local.example .env.local  # or create manually
+npm run dev
+```
+
+Frontend: **http://localhost:3000** | Mock API: **http://localhost:8000**
+
+**Login**: Use "Development Credentials Login" with any email/password (e.g., `admin@bank.internal` / `password123`)
+
 ## Local Development
 
 For a step‑by‑step guide on running the full stack locally (including required environment variables, manual alternatives, verification commands, and UI screenshot instructions), see the documentation at **[docs/local-dev.md](docs/local-dev.md)**.
+
+### UI Screenshots (Captured Locally)
+
+| Page | Screenshot |
+|------|------------|
+| Login | ![Login](docs/screenshots/01-login-page.png) |
+| Dashboard | ![Dashboard](docs/screenshots/03-dashboard-overview.png) |
+| Incidents | ![Incidents](docs/screenshots/04-incidents-list.png) |
+| AI Chat | ![Chat](docs/screenshots/06-chat-page.png) |
+| Metrics | ![Metrics](docs/screenshots/09-metrics-page.png) |
+| Settings | ![Settings](docs/screenshots/10-settings-page.png) |
+| Runbooks | ![Runbooks](docs/screenshots/11-runbooks-page.png) |
+| RCA | ![RCA](docs/screenshots/12-rca-page.png) |
+| Mobile | ![Mobile](docs/screenshots/13-dashboard-mobile.png) |
 
 ## Phases
 

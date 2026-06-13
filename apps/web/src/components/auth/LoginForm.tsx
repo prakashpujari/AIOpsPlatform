@@ -6,6 +6,9 @@ import toast from "react-hot-toast";
 
 export function LoginForm() {
   const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState("admin@bank.internal");
+  const [password, setPassword] = useState("password123");
+  const [showCredentials, setShowCredentials] = useState(false);
 
   async function handleKeycloakLogin() {
     setLoading(true);
@@ -13,6 +16,29 @@ export function LoginForm() {
       await signIn("keycloak", { callbackUrl: "/chat" });
     } catch {
       toast.error("Login failed. Please try again.");
+      setLoading(false);
+    }
+  }
+
+  async function handleCredentialsLogin(e: React.FormEvent) {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const result = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+        callbackUrl: "/chat",
+      });
+      if (result?.error) {
+        toast.error("Invalid credentials");
+      } else {
+        toast.success("Logged in successfully!");
+        window.location.href = "/chat";
+      }
+    } catch {
+      toast.error("Login failed. Please try again.");
+    } finally {
       setLoading(false);
     }
   }
@@ -54,6 +80,49 @@ export function LoginForm() {
           </span>
         </div>
       </div>
+
+      {/* Development credentials login */}
+      <details className="group">
+        <summary className="text-xs text-slate-500 hover:text-slate-400 cursor-pointer flex items-center gap-1">
+          <span className="transition-transform group-open:rotate-90">▶</span>
+          Development Credentials Login
+        </summary>
+        <form onSubmit={handleCredentialsLogin} className="mt-4 space-y-3">
+          <div>
+            <label htmlFor="email" className="block text-xs text-slate-400 mb-1">
+              Email
+            </label>
+            <input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full px-3 py-2 bg-surface-card border border-slate-700 rounded-lg text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent"
+              placeholder="admin@bank.internal"
+            />
+          </div>
+          <div>
+            <label htmlFor="password" className="block text-xs text-slate-400 mb-1">
+              Password
+            </label>
+            <input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full px-3 py-2 bg-surface-card border border-slate-700 rounded-lg text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent"
+              placeholder="password123"
+            />
+          </div>
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full py-2 px-4 bg-slate-800 hover:bg-slate-700 disabled:opacity-50 text-white font-medium rounded-lg transition-colors"
+          >
+            {loading ? "Signing in..." : "Sign In with Credentials"}
+          </button>
+        </form>
+      </details>
 
       <div className="flex flex-col gap-2">
         {["admin · Full platform access", "operator · Incident management", "analyst · Read + analysis", "viewer · Read only"].map((line) => {

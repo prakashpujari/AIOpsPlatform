@@ -62,17 +62,32 @@ export const authConfig: NextAuthConfig = {
   url: process.env.NEXTAUTH_URL,
   providers: [],
   callbacks: {
-    async jwt({ token, account, profile }) {
+    async jwt({ token, account, profile, user }) {
       if (account) {
-        const keycloakProfile = profile as Record<string, unknown> | undefined;
-        const realmAccess = keycloakProfile?.["realm_access"] as { roles?: string[] } | undefined;
-        return {
-          ...token,
-          accessToken: account.access_token,
-          refreshToken: account.refresh_token,
-          accessTokenExpires: (account.expires_at ?? 0) * 1000,
-          roles: realmAccess?.roles ?? [],
-        };
+        // Handle Keycloak profile
+        if (account.provider === "keycloak") {
+          const keycloakProfile = profile as Record<string, unknown> | undefined;
+          const realmAccess = keycloakProfile?.["realm_access"] as { roles?: string[] } | undefined;
+          return {
+            ...token,
+            accessToken: account.access_token,
+            refreshToken: account.refresh_token,
+            accessTokenExpires: (account.expires_at ?? 0) * 1000,
+            roles: realmAccess?.roles ?? [],
+            sub: token.sub ?? user?.id,
+          };
+        }
+        // Handle credentials provider (development)
+        if (account.provider === "credentials") {
+          return {
+            ...token,
+            accessToken: "mock-dev-token-" + Date.now(),
+            refreshToken: "mock-refresh-token",
+            accessTokenExpires: Date.now() + 8 * 60 * 60 * 1000,
+            roles: (user as any)?.roles ?? ["admin", "operator", "analyst"],
+            sub: token.sub ?? user?.id,
+          };
+        }
       }
       if (Date.now() < (token.accessTokenExpires ?? 0)) return token;
       return refreshAccessToken(token);

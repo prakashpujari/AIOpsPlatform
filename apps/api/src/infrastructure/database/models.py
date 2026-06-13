@@ -190,6 +190,6 @@ class KnowledgeDocumentORM(Base, UUIDPrimaryKeyMixin, TimestampMixin):
     source: Mapped[str] = mapped_column(String(500), nullable=False)
     content_type: Mapped[str] = mapped_column(String(50), nullable=False)
     chunk_count: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
-    metadata: Mapped[dict] = mapped_column(JSONB, nullable=False, default=dict)
+    doc_metadata: Mapped[dict] = mapped_column(JSONB, nullable=False, default=dict)
     ingested_by: Mapped[str] = mapped_column(String(200), nullable=False)
     is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
