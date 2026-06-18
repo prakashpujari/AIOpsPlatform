@@ -92,9 +92,9 @@ def test_main_app_wires_routers() -> None:
     assert "generate_latest" in content
 
 
-def test_model_registry_has_six_models() -> None:
+def test_model_registry_has_seven_models() -> None:
     content = (GW / "src/registry/model_registry.py").read_text()
-    model_ids = ["llama3.3-70b", "deepseek-r1", "deepseek-coder", "qwen3-72b", "phi4-14b", "gemma2-9b"]
+    model_ids = ["llama3.3-70b", "deepseek-r1", "deepseek-coder", "qwen3-72b", "phi4-14b", "gemma2-9b", "llama-3.3-70b-groq"]
     for mid in model_ids:
         assert mid in content, f"Model {mid} missing from registry"
 

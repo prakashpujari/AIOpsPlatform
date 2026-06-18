@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import json
 import logging
 from contextlib import asynccontextmanager
 from datetime import datetime, timezone
@@ -15,14 +14,13 @@ from prometheus_client import CONTENT_TYPE_LATEST, Counter, Histogram, generate_
 from .api.chat import router as chat_router
 from .api.gateway_health import router as health_router
 from .core.config import settings
-from .core.tracing import setup_tracing
 from .core.exceptions import GatewayError
+from .core.tracing import setup_tracing
 from .health.health_monitor import health_monitor
 
 logger = logging.getLogger(__name__)
 
 # ── Prometheus metrics ────────────────────────────────────────────────────────
-from prometheus_client import Gauge
 REQUEST_COUNT = Counter(
     "gateway_requests_total", "Total gateway requests", ["method", "endpoint", "status"]
 )
@@ -33,10 +31,6 @@ REQUEST_LATENCY = Histogram(
 # RAG request metric – counts RAG endpoint usage
 RAG_REQUESTS = Counter(
     "gateway_rag_requests_total", "Total RAG endpoint requests", ["type"]
-)
-ROUTING_DECISIONS = Counter(
-    "gateway_routing_decisions_total", "Routing decisions by strategy and model",
-    ["strategy", "model"]
 )
 
 

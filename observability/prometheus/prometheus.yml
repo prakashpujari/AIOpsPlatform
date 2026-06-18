@@ -13,7 +13,7 @@ alerting:
     - static_configs:
         - targets: []
 
-scrape_configs:
+scrap1e_configs:
   - job_name: prometheus
     static_configs:
       - targets: ["localhost:9090"]

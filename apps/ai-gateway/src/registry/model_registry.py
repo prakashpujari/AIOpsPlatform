@@ -157,6 +157,28 @@ _MODELS: list[ModelDefinition] = [
         tags=["fast", "cheap", "triage", "fallback"],
         endpoint_path="/api/chat",
     ),
+    # ── Groq Models ──────────────────────────────────────────────────────────
+    ModelDefinition(
+        id="llama-3.3-70b-groq",
+        name="Llama 3.3 70B (Groq)",
+        provider=ModelProvider.GROQ,
+        tier=ModelTier.POWERFUL,
+        capabilities=[
+            ModelCapability.CHAT,
+            ModelCapability.REASONING,
+            ModelCapability.SUMMARIZATION,
+            ModelCapability.CLASSIFICATION,
+            ModelCapability.MULTILINGUAL,
+        ],
+        context_window=128_000,
+        max_output_tokens=8_192,
+        gpu_vram_gb=0.0,  # Cloud-hosted
+        cost_per_1k_prompt_tokens=0.00005,
+        cost_per_1k_completion_tokens=0.0001,
+        avg_tokens_per_second=200.0,  # Groq is very fast
+        priority=10,
+        tags=["cloud", "fast"],
+    ),
 ]
 
 _MODEL_MAP: dict[str, ModelDefinition] = {m.id: m for m in _MODELS}

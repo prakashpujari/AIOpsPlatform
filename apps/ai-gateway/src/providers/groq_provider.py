@@ -38,8 +38,13 @@ class GroqProvider(BaseProvider):
         max_tokens: int = 2048,
         **kwargs: Any,
     ) -> dict:
+        # Map internal model IDs to Groq's actual model names
+        GROQ_MODEL_MAP = {
+            "llama-3.3-70b-groq": "llama-3.3-70b-versatile",
+        }
+        actual_model = GROQ_MODEL_MAP.get(model_id, model_id)
         payload = {
-            "model": model_id,
+            "model": actual_model,
             "messages": messages,
             "temperature": temperature,
             "max_tokens": max_tokens,
@@ -68,8 +73,13 @@ class GroqProvider(BaseProvider):
         max_tokens: int = 2048,
         **kwargs: Any,
     ) -> AsyncIterator[str]:
+        # Map internal model IDs to Groq's actual model names
+        GROQ_MODEL_MAP = {
+            "llama-3.3-70b-groq": "llama-3.3-70b-versatile",
+        }
+        actual_model = GROQ_MODEL_MAP.get(model_id, model_id)
         payload = {
-            "model": model_id,
+            "model": actual_model,
             "messages": messages,
             "temperature": temperature,
             "max_tokens": max_tokens,

@@ -6,8 +6,10 @@ import logging
 import time
 from enum import Enum
 
+from prometheus_client import Counter, Histogram
+
 from ..core.config import settings
-from ..core.exceptions import CircuitOpenError, NoHealthyModelError
+from ..core.exceptions import NoHealthyModelError
 from ..health.health_monitor import ModelHealthMonitor, health_monitor
 from ..registry.model_registry import ModelRegistry, registry
 from ..registry.schemas import ModelDefinition, ModelStatus, RoutingDecision
@@ -26,8 +28,6 @@ class RoutingStrategy(str, Enum):
     QUALITY = "quality"
 
 
-from prometheus_client import Counter, Histogram
-
 # Metrics for routing decisions and model usage
 MODEL_REQUEST_COUNT = Counter(
     "gateway_model_requests_total",
@@ -39,6 +39,12 @@ MODEL_LATENCY = Histogram(
     "Latency of request handling per model",
     ["model"]
 )
+ROUTING_DECISIONS = Counter(
+    "gateway_routing_decisions_total",
+    "Routing decisions by strategy and model",
+    ["strategy", "model"]
+)
+
 
 class RoutingEngine:
     """Selects the optimal model given routing strategy, health state, and circuit breakers."""
@@ -61,9 +67,10 @@ class RoutingEngine:
         """Select a model and compute routing decision.
 
         Records the start time to calculate latency metrics and handles
-        fallback chain creation. """
+        fallback chain creation. Returns a RoutingDecision containing the
+        selected model and fallback chain.
+        """
         start_time = time.time()
-        """Return a RoutingDecision containing the selected model and fallback chain."""
 
         # ── Build healthy candidate pool ─────────────────────────────────────
         candidates = self._get_healthy_candidates()
@@ -91,7 +98,6 @@ class RoutingEngine:
 
         fallbacks = get_fallback_chain(selected, candidates, max_fallbacks=settings.model_routing_max_fallbacks)
         # Increment routing decision metric
-        from ..main import ROUTING_DECISIONS
         ROUTING_DECISIONS.labels(strategy=strategy.value, model=selected.id).inc()
         # Record request latency metric (seconds)
         elapsed = time.time() - start_time

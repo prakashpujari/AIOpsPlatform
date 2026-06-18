@@ -45,6 +45,11 @@ class ModelHealthMonitor:
         self._health: dict[str, ModelStatus] = {}
         self._latency: dict[str, float] = {}
         self._task: asyncio.Task | None = None  # type: ignore[type-arg]
+        # Initialize cloud providers as healthy immediately
+        for model in registry.all_models():
+            if model.provider == ModelProvider.GROQ:
+                self._health[model.id] = ModelStatus.HEALTHY
+                MODEL_HEALTH.labels(model=model.id).set(1)
 
     # ── Lifecycle ────────────────────────────────────────────────────────────
 
@@ -96,6 +101,11 @@ class ModelHealthMonitor:
     # ── Internal ─────────────────────────────────────────────────────────────
 
     async def _poll_loop(self) -> None:
+        # First pass: ensure cloud providers are healthy immediately
+        for model in registry.all_models():
+            if model.provider == ModelProvider.GROQ:
+                self._health[model.id] = ModelStatus.HEALTHY
+                MODEL_HEALTH.labels(model=model.id).set(1)
         while True:
             await self._check_all()
             await asyncio.sleep(self._poll_interval)
@@ -107,6 +117,8 @@ class ModelHealthMonitor:
     async def _check_model(self, model) -> None:  # type: ignore[no-untyped-def]
         url = self._health_url(model)
         if url is None:
+            # For cloud providers like Groq, assume healthy (no local health check)
+            self._health[model.id] = ModelStatus.HEALTHY
             return
 
         t0 = time.monotonic()

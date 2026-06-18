@@ -8,14 +8,14 @@ from src.registry.model_registry import ModelRegistry, registry
 from src.registry.schemas import ModelCapability, ModelProvider, ModelTier
 
 
-def test_registry_has_all_six_models() -> None:
+def test_registry_has_all_seven_models() -> None:
     models = registry.all_models()
-    assert len(models) == 6
+    assert len(models) == 7
 
 
 def test_all_required_models_present() -> None:
     ids = {m.id for m in registry.all_models()}
-    expected = {"llama3.3-70b", "deepseek-r1", "deepseek-coder", "qwen3-72b", "phi4-14b", "gemma2-9b"}
+    expected = {"llama3.3-70b", "deepseek-r1", "deepseek-coder", "qwen3-72b", "phi4-14b", "gemma2-9b", "llama-3.3-70b-groq"}
     assert expected == ids
 
 

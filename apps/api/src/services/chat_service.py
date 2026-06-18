@@ -89,11 +89,14 @@ class ChatService:
         headers = {
             "Authorization": f"Bearer {settings.ai_gateway_api_key.get_secret_value()}",
             "Content-Type": "application/json",
+            "X-API-Key": settings.ai_gateway_api_key.get_secret_value(),
         }
         payload = {
-            "message": message,
-            "history": history[-20:],
-            "intent": "chat",
+            "messages": history + [{"role": "user", "content": message}],
+            "strategy": "intent",
+            "temperature": 0.7,
+            "max_tokens": 2048,
+            "stream": True,
         }
         async with httpx.AsyncClient(timeout=settings.ai_gateway_timeout) as client:
             async with client.stream("POST", url, json=payload, headers=headers) as response:
