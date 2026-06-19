@@ -1,0 +1,19 @@
+{
+  "name": "enterprise-ai-platform",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Enterprise Banking AI Support Copilot & AIOps Platform",
+  "workspaces": [
+    "apps/web"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace=apps/web",
+    "build": "npm run build --workspace=apps/web",
+    "lint": "npm run lint --workspace=apps/web",
+    "typecheck": "npm run typecheck --workspace=apps/web"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  }
+}
